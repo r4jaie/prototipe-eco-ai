@@ -1,63 +1,189 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoAI - Pengelola Sampah Pintar</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; padding: 0; background-color: #f4f7f6; color: #333; 
+    
+    <!-- Memanggil Tailwind CSS langsung dari CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Konfigurasi untuk mengaktifkan mode gelap (Dark Mode) -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
         }
-        header { 
-            background-color: #2e7d32; color: white; padding: 1.5rem; text-align: center; 
-        }
-        .hero { 
-            text-align: center; padding: 4rem 2rem; background-color: white; 
-        }
-        .hero h2 { 
-            font-size: 2.5rem; margin-bottom: 1rem; color: #1b5e20; 
-        }
-        .features { 
-            display: flex; justify-content: center; gap: 2rem; padding: 3rem 2rem; flex-wrap: wrap; 
-        }
-        .card { 
-            background: white; padding: 2rem; border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 300px; text-align: center; 
-        }
-        .card h3 { color: #2e7d32; }
-        .cta-button { 
-            display: inline-block; padding: 1rem 2rem; background: #ff9800; 
-            color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 1rem; 
-        }
-    </style>
+    </script>
 </head>
-<body>
+<!-- Kelas transition-colors membuat perpindahan warna dark/light menjadi mulus -->
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 font-sans antialiased">
 
-    <header>
-        <h1>EcoAI</h1>
-    </header>
+    <!-- 1. NAVBAR UNTUK DESKTOP -->
+    <nav class="bg-green-700 dark:bg-green-900 text-white fixed w-full z-40 top-0 shadow-md transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 font-bold text-2xl tracking-wider">
+                    EcoAI
+                </div>
+                
+                <!-- Menu Desktop (Tersembunyi di Mobile) -->
+                <div class="hidden md:flex space-x-8 items-center font-medium">
+                    <a href="#" class="hover:text-green-300 transition">Beranda</a>
+                    <a href="#fitur" class="hover:text-green-300 transition">Fitur</a>
+                    <a href="#edukasi" class="hover:text-green-300 transition">Edukasi</a>
+                    <!-- Tombol Dark Mode Desktop -->
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-green-800 dark:bg-green-700 hover:bg-green-600 transition shadow-inner">
+                        <span id="theme-icon-desktop">🌙</span>
+                    </button>
+                </div>
 
-    <section class="hero">
-        <h2>Kelola Sampah Lebih Cerdas Bersama AI</h2>
-        <p>Prototipe interaktif untuk memilah, melacak, dan menekan limbah makanan di lingkungan Anda.</p>
-        <a href="#" class="cta-button">Coba Demo Aplikasi</a>
-    </section>
-
-    <section class="features">
-        <div class="card">
-            <h3>🤖 Agen AI Pengelola</h3>
-            <p>Tanyakan jenis sampah Anda. Agen AI kami akan langsung memberikan panduan daur ulang dan teknik pengomposan secara otomatis.</p>
+                <!-- Tombol Hamburger Mobile (Tersembunyi di Desktop) -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleSidebar()" class="p-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="card">
-            <h3>📍 Pelacakan Geolokasi</h3>
-            <p>Temukan bank sampah terdekat, jadwal jemput truk sampah, dan rute pengolahan limbah langsung dari lokasi Anda saat ini.</p>
-        </div>
-        <div class="card">
-            <h3>📚 Edukasi Limbah Makanan</h3>
-            <p>Akses modul panduan visual interaktif untuk menerapkan gaya hidup zero waste dan mengurangi sisa makanan di rumah tangga.</p>
-        </div>
-    </section>
+    </nav>
 
+    <!-- 2. SIDEBAR UNTUK MOBILE -->
+    <!-- Latar belakang gelap saat sidebar terbuka -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden transition-opacity"></div>
+
+    <!-- Panel Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 text-gray-900 dark:text-white z-50 transform -translate-x-full transition-transform duration-300 ease-in-out shadow-xl">
+        <div class="flex items-center justify-between p-4 border-b dark:border-gray-700">
+            <span class="font-bold text-xl text-green-700 dark:text-green-400">Menu Navigasi</span>
+            <button onclick="toggleSidebar()" class="p-2 text-gray-500 hover:text-red-500">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="p-4 flex flex-col space-y-6 font-medium">
+            <a href="#" class="hover:text-green-600 dark:hover:text-green-400">Beranda</a>
+            <a href="#fitur" class="hover:text-green-600 dark:hover:text-green-400">Fitur</a>
+            <a href="#edukasi" class="hover:text-green-600 dark:hover:text-green-400">Edukasi</a>
+            <div class="border-t dark:border-gray-700 pt-4">
+                <!-- Tombol Dark Mode Mobile -->
+                <button onclick="toggleDarkMode()" class="flex items-center space-x-3 w-full text-left hover:text-green-600">
+                    <span id="theme-icon-mobile">🌙</span>
+                    <span>Ubah Mode Tampilan</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. KONTEN UTAMA (Hero & Fitur) -->
+    <main class="pt-24 pb-16 px-4 max-w-7xl mx-auto min-h-screen">
+        
+        <!-- Bagian Hero -->
+        <section class="text-center py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-12 transition-colors duration-300">
+            <h2 class="text-3xl md:text-5xl font-extrabold text-green-800 dark:text-green-400 mb-4 tracking-tight">Kelola Sampah Lebih Cerdas Bersama AI</h2>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Prototipe interaktif untuk memilah, melacak, dan menekan limbah makanan di lingkungan Anda secara  real-time.</p>
+            <div class="mt-8 flex justify-center gap-4">
+                <a href="#" class="inline-block px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg shadow-lg transition-transform transform hover:-translate-y-1">Mulai Demo</a>
+            </div>
+        </section>
+
+        <!-- Bagian Fitur -->
+        <section id="fitur" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl mb-4">🤖</div>
+                <h3 class="text-xl font-bold text-green-700 dark:text-green-400 mb-3">Agen AI Pengelola</h3>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Tanyakan jenis sampah Anda. Agen AI akan langsung memberikan panduan daur ulang dan teknik pengomposan secara otomatis.</p>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl mb-4">📍</div>
+                <h3 class="text-xl font-bold text-green-700 dark:text-green-400 mb-3">Pelacakan Geolokasi</h3>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Temukan bank sampah terdekat, jadwal jemput truk sampah, dan rute pengolahan limbah langsung dari lokasi Anda saat ini.</p>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 text-center hover:shadow-lg transition-shadow">
+                <div class="text-4xl mb-4">📚</div>
+                <h3 class="text-xl font-bold text-green-700 dark:text-green-400 mb-3">Edukasi & Kompos</h3>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Akses modul panduan visual interaktif untuk menerapkan gaya hidup zero waste dan mengurangi sisa makanan di rumah tangga.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 4. FOOTER LENGKAP -->
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Kolom Alamat & Info -->
+            <div>
+                <h4 class="text-white text-lg font-bold mb-4 tracking-wider">EcoAI</h4>
+                <p class="mb-4 text-sm leading-relaxed">Solusi teknologi berbasis Kecerdasan Buatan untuk mewujudkan ekosistem pengelolaan sampah masyarakat yang lebih baik.</p>
+                <p class="text-sm">📍 Jl. Teknologi Hijau No. 12,<br>Bandung, Jawa Barat, Indonesia</p>
+            </div>
+            
+            <!-- Kolom Kontak -->
+            <div>
+                <h4 class="text-white text-lg font-bold mb-4">Hubungi Kami</h4>
+                <ul class="space-y-2 text-sm">
+                    <li>Email: halo@ecoai.id</li>
+                    <li>Telepon: +62 811-0000-0000</li>
+                    <li>WhatsApp: +62 812-1111-2222</li>
+                </ul>
+            </div>
+            
+            <!-- Kolom Kebijakan & Privasi -->
+            <div>
+                <h4 class="text-white text-lg font-bold mb-4">Informasi Legal</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-white transition">Kebijakan Privasi</a></li>
+                    <li><a href="#" class="hover:text-white transition">Syarat & Ketentuan</a></li>
+                    <li><a href="#" class="hover:text-white transition">Panduan Keamanan Data</a></li>
+                    <li><a href="#" class="hover:text-white transition">Lisensi Open Source</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-gray-800 text-center text-sm">
+            <p>&copy; 2026 EcoAI Project. Hak Cipta Dilindungi Undang-Undang.</p>
+        </div>
+    </footer>
+
+    <!-- 5. JAVASCRIPT UNTUK INTERAKSI -->
+    <script>
+        // Logika untuk membuka dan menutup Sidebar di Mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            // Toggle class '-translate-x-full' (menggeser sidebar keluar/masuk layar)
+            sidebar.classList.toggle('-translate-x-full');
+            // Toggle class 'hidden' pada latar belakang transparan
+            overlay.classList.toggle('hidden');
+        }
+
+        // Logika untuk Dark/Light Mode
+        function toggleDarkMode() {
+            const htmlTag = document.documentElement;
+            const iconDesktop = document.getElementById('theme-icon-desktop');
+            const iconMobile = document.getElementById('theme-icon-mobile');
+            
+            // Tambah atau hapus kelas 'dark' di tag <html>
+            htmlTag.classList.toggle('dark');
+            
+            // Cek apakah sekarang sedang dalam mode gelap
+            const isDarkMode = htmlTag.classList.contains('dark');
+            
+            // Ubah ikon matahari/bulan menyesuaikan mode aktif
+            if (isDarkMode) {
+                iconDesktop.textContent = '☀️';
+                iconMobile.textContent = '☀️';
+            } else {
+                iconDesktop.textContent = '🌙';
+                iconMobile.textContent = '🌙';
+            }
+        }
+    </script>
 </body>
 </html>
